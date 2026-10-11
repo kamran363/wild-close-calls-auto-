@@ -1,0 +1,27 @@
+`name: Wild Close Calls daily posts
+on:
+  schedule:
+    - cron: '0 3 _ _ *'
+    - cron: '0 5 _ _ *'
+    - cron: '0 6 _ _ *'
+    - cron: '30 7 _ _ *'
+    - cron: '0 9 _ _ *'
+    - cron: '0 11 _ _ *'
+    - cron: '30 12 _ _ *'
+    - cron: '0 13 _ _ *'
+    - cron: '0 15 _ _ *'
+    - cron: '0 16 _ _ *'
+    - cron: '0 17 _ _ *'
+  workflow_dispatch:
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post next queued item
+        env:
+          PAGE_ID: '61594894842059'
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+        run: python3 scripts/post.py && git config user.name "wcc-auto" && git config user.email "wcc-auto@users.noreply.github.com" && git add content/state.json && git diff --cached --quiet || git commit -m "advance queue" && git push`
